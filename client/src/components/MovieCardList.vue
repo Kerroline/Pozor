@@ -6,7 +6,7 @@
             :key="movie.id"
         />
     </div>
-    <h2 v-else style="color: red">
+    <h2 v-else class="isH2">
         Список одобренных фильмов пуст
     </h2>
 </template>
@@ -32,5 +32,8 @@
     flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-between;
+}
+.isH2 {
+  color: red
 }
 </style>

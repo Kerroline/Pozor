@@ -9,7 +9,7 @@
                 {{movie.status.name}}
             </div>
             <button
-                @click="$router.push(`/moviecard/${movie.id}`)"
+                @click="$router.push(`/movie-card/${movie.id}`)"
                 style="margin: 1px"
             > 
                 View 

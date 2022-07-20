@@ -7,8 +7,8 @@
                 type="text" 
                 placeholder="Name"
             />
-            <my-button 
-                style="align-self:flex-end;  margin-top: 10px;"
+            <my-button
+                class="btn"
                 @click="createGenre"
             > 
                 Create
@@ -20,29 +20,31 @@
 <script>
 import MyButton from './UI/MyButton.vue';
 import MyInput from './UI/MyInput.vue'
-    export default {
-        components: { 
-            MyInput,
-            MyButton 
+
+export default {
+    components: {
+        MyInput,
+        MyButton
+    },
+    data() {
+        return {
+            genre: this.getDefaultState(),
+        };
+    },
+    methods: {
+        createGenre() {
+            if (this.name !== '') {
+              this.$emit('create',this.genre);
+              this.genre = this.getDefaultState();
+            }
         },
-        data() {
-            return {
-                genre: {
-                    name: "",
-                },
-            };
-        },
-        methods: {
-            createGenre() {
-                if(this.name != '') {
-                    this.$emit('create',this.genre);
-                    this.genre = {
-                        name: '',
-                    }
-                };
-            },
-        }, 
-    }
+        getDefaultState() {
+          return {
+            name: '',
+          }
+        }
+    },
+}
 </script>
 
 <style scoped>
@@ -51,5 +53,10 @@ form {
     display: flex;
     flex-direction: column;
 }
-
+</style>
+<style lang="scss" scoped>
+  .btn {
+    align-self:flex-end;
+    margin-top: 10px;
+  }
 </style>

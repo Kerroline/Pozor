@@ -12,17 +12,17 @@
 
             <div class="card__main__text">
                 <div class="card__main__text__item"> 
-                    <strong>Title:</strong> {{movie.title}} 
+                    <strong>Title:</strong> {{ movie.title }}
                 </div>
                  <div class="card__main__text__item"> 
-                    <strong>Description:</strong> {{movie.description}}
+                    <strong>Description:</strong> {{ movie.description }}
                 </div>
             </div>
             <div class="card__main__info">
-                <div><strong>Author:</strong>  {{movie.author?.email}}</div>
-                <div><strong>Status:</strong>  {{movie.status?.name}}</div>
+                <div><strong>Author:</strong>  {{ movie.author?.email }}</div>
+                <div><strong>Status:</strong>  {{ movie.status?.name }}</div>
                 <div v-if="movie.status?.id ==  MovieStatusId?.APPROVED_ID">
-                    <strong>Approver:</strong>  {{movie.approver?.email}}
+                    <strong>Approver:</strong>  {{ movie.approver?.email }}
                 </div>
                 <div class="card__main__info__btns">
                     <div v-if="!isAdmin">
@@ -83,153 +83,161 @@
 import { HOST_URL, HOST_API_URL, STATUSES_ID } from "@/store";
 import { isProxy, toRaw } from 'vue';
 import { mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-     export default {
-        props: {
-            movie: {
-                type: Object,
-                required : true
+ export default {
+    props: {
+        movie: {
+            type: Object,
+            required : true
+        }
+    },
+    data() {
+        return {
+            isAdmin: false,
+            MovieStatusId : {},
+            postersArray : [],
+            galleriesArray : [],
+        }
+    },
+    methods: {
+        ...mapGetters({
+            getUserToken: 'auth/getUserToken',
+        }),
+        generatePostersPath() {
+            if(isProxy(this.movie.posters)) {
+                const moviePosters = toRaw(this.movie.posters)
+                moviePosters.forEach(element => {
+                    const posterPath = HOST_URL + element.path;
+                    this.postersArray.push(posterPath);
+                });
             }
         },
-        data() {
-            return {
-                isAdmin: false,
-                MovieStatusId : {},
-                postersArray : [],
-                galleriesArray : [],
+        generateGalleriesPaths() {
+            if(isProxy(this.movie.galleries)) {
+                const movieGalleries = toRaw(this.movie.galleries)
+                movieGalleries.forEach(element => {
+                    const galleryPath = HOST_URL + element.path;
+                    this.galleriesArray.push(galleryPath);
+                });
             }
         },
-        methods: {
-            ...mapGetters({
-                getUserToken: 'auth/getUserToken',
-            }),
-            generatePostersPath() {
-                if(isProxy(this.movie.posters)) { 
-                    const moviePosters = toRaw(this.movie.posters)
-                    moviePosters.forEach(element => {
-                        const posterPath = HOST_URL + element.path;
-                        this.postersArray.push(posterPath);
-                    });
+        //TODO: ВОТ НАЧИНАЯ ОТСЮДА И ДО ОБЕДА
+        //TODO: ВЫНЕСТИ ЭТО ВСЕ В ОТДЕЛЬНЫЙ ФАЙЛ НАДО БУДЕТ
+        async approvingMovie(decision) {
+            const requestData = { "movieId":this.movie.id, "decision":decision }
+            try {
+                const response = await fetch(`${HOST_API_URL}/approveMovie`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type' : 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + await this.getUserToken(),
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                if(response.ok) {
+                    const content = await response.json();
+                    //TODO: УБРАТЬ ЭТО ГОВНО
+                    //TODO: И УБРАТЬ ЛИБО ЧЕРЕЗ РОУТЕР, ЛИБО ИСПОЛЬЗОВАТЬ ТО ЧТО РЕРЕНДЕРИТ
+                    window.location.reload();
                 }
-            },
-            generateGalleriesPaths() {
-                if(isProxy(this.movie.galleries)) { 
-                    const movieGalleries = toRaw(this.movie.galleries)
-                    movieGalleries.forEach(element => {
-                        const galleryPath = HOST_URL + element.path;
-                        this.galleriesArray.push(galleryPath);
-                    });
-                }
-            },
-            async approvingMovie(decision) {
-                const requestData = {"movieId":this.movie.id,"decision":decision}
-                try {
-                    const response = await fetch(`${HOST_API_URL}/approveMovie`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type' : 'application/json',
-                            'Accept': 'application/json',
-                            'Authorization': 'Bearer ' + await this.getUserToken(),
-                        },
-                        body: JSON.stringify(requestData)
-                    });
-                    if(response.ok) {
-                        const content = await response.json();
-                        //TODO : УБРАТЬ ЭТО ГОВНО
-                        window.location.reload();
-                    }
-                } catch (error) {
-                    console.log("ERRRR:: ", error);
-                }
-            },
-            async publishingMovie() {
-                try {
-                    const response = await fetch(`${HOST_API_URL}/publishMyMovie/${this.movie.id}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type' : 'application/json',
-                            'Accept': 'application/json',
-                            'Authorization': 'Bearer ' + await this.getUserToken(),
-                        },
-                    });
-                    if(response.ok) {
-                        const content = await response.json();
-                        //TODO : УБРАТЬ ЭТО ГОВНО
-                        window.location.reload();
-                    }
-                } catch (error) {
-                    console.log("ERRRR:: ", error);
-                }
-            },
-            async canceledPublishMovie() {
-                try {
-                    const response = await fetch(`${HOST_API_URL}/canceledPublishMyMovie/${this.movie.id}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type' : 'application/json',
-                            'Accept': 'application/json',
-                            'Authorization': 'Bearer ' + await this.getUserToken(),
-                        },
-                    });
-                    if(response.ok) {
-                        const content = await response.json();
-                        //TODO : УБРАТЬ ЭТО ГОВНО
-                        window.location.reload();
-                    }
-                } catch (error) {
-                    console.log("ERRRR:: ", error);
-                }
-            },
-            async restoreMovie() {
-                try {
-                    const response = await fetch(`${HOST_API_URL}/restoreMyMovie/${this.movie.id}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type' : 'application/json',
-                            'Accept': 'application/json',
-                            'Authorization': 'Bearer ' + await this.getUserToken(),
-                        },
-                    });
-                    if(response.ok) {
-                        const content = await response.json();
-                        //TODO : УБРАТЬ ЭТО ГОВНО
-                        window.location.reload();
-                    }
-                } catch (error) {
-                    console.log("ERRRR:: ", error);
-                }
-            },
-            async deleteMovie(isTrashing) {
-                const endpoint = isTrashing ? '/deleteMyMovie' : '/trashingMyMovie';
-                try {
-                    const response = await fetch(`${HOST_API_URL}${endpoint}/${this.movie.id}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type' : 'application/json',
-                            'Accept': 'application/json',
-                            'Authorization': 'Bearer ' + await this.getUserToken(),
-                        },
-                    });
-                    if(response.ok) {
-                        //TODO : УБРАТЬ ЭТО ГОВНО
-                        if(isTrashing) {
-                            await this.$router.push('/');
-                        }
-                        window.location.reload();
-                    }
-                } catch (error) {
-                    console.log("ERRRR:: ", error);
-                }
-            },
+            } catch (error) {
+                console.log("ERRRR:: ", error);
+            }
         },
-        computed: {
+        async publishingMovie() {
+            try {
+                const response = await fetch(`${HOST_API_URL}/publishMyMovie/${this.movie.id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type' : 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + await this.getUserToken(),
+                    },
+                });
+                if(response.ok) {
+                    const content = await response.json();
+                    //TODO : УБРАТЬ ЭТО ГОВНО
+                    //TODO: И УБРАТЬ ЛИБО ЧЕРЕЗ РОУТЕР, ЛИБО ИСПОЛЬЗОВАТЬ ТО ЧТО РЕРЕНДЕРИТ
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.log("ERRRR:: ", error);
+            }
         },
-        mounted() {
-            this.isAdmin = this.$store.getters['auth/isAdmin'];
-            this.generatePostersPath();
-            this.generateGalleriesPaths();
-            this.MovieStatusId = STATUSES_ID;
+        async canceledPublishMovie() {
+            try {
+                const response = await fetch(`${HOST_API_URL}/canceledPublishMyMovie/${this.movie.id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type' : 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + await this.getUserToken(),
+                    },
+                });
+                if(response.ok) {
+                    const content = await response.json();
+                    //TODO : УБРАТЬ ЭТО ГОВНО
+                    //TODO: И УБРАТЬ ЛИБО ЧЕРЕЗ РОУТЕР, ЛИБО ИСПОЛЬЗОВАТЬ ТО ЧТО РЕРЕНДЕРИТ
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.log("ERRRR:: ", error);
+            }
         },
-    }
+        async restoreMovie() {
+            try {
+                const response = await fetch(`${HOST_API_URL}/restoreMyMovie/${this.movie.id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type' : 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + await this.getUserToken(),
+                    },
+                });
+                if(response.ok) {
+                    const content = await response.json();
+                    //TODO : УБРАТЬ ЭТО ГОВНО
+                    //TODO: ДА СКОЛЬКО Ж ИХ ТУТ
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.log("ERRRR:: ", error);
+            }
+        },
+        async deleteMovie(isTrashing) {
+            const endpoint = isTrashing ? '/deleteMyMovie' : '/trashingMyMovie';
+            try {
+                const response = await fetch(`${HOST_API_URL}${endpoint}/${this.movie.id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type' : 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + await this.getUserToken(),
+                    },
+                });
+                if(response.ok) {
+                    //TODO : УБРАТЬ ЭТО ГОВНО
+                    //TODO: ОМГ
+                    if(isTrashing) {
+                        await this.$router.push('/');
+                    }
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.log("ERRRR:: ", error);
+            }
+        },
+    },
+    computed: {
+    },
+    mounted() {
+        this.isAdmin = this.$store.getters['auth/isAdmin'];
+        this.generatePostersPath();
+        this.generateGalleriesPaths();
+        this.MovieStatusId = STATUSES_ID;
+    },
+}
 </script>
 
 <style scoped>

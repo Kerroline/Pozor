@@ -1,7 +1,7 @@
 <template>
     <div 
         class="card"
-        @click="$router.push(`/moviecard/${movie.id}`)"
+        @click="goToCard"
     >
         <div class="card__poster">
             <img 
@@ -11,10 +11,10 @@
         </div>
         <div class="card__main__text">
             <div class="card__main__text__item"> 
-                <strong>Title:</strong> {{movie.title}} 
+                <strong>Title:</strong> {{ movie.title }}
             </div>
                 <div class="card__main__text__item"> 
-                <strong>Description:</strong> {{movie.description}}
+                <strong>Description:</strong> {{ movie.description }}
             </div>
         </div>
     </div>
@@ -51,6 +51,9 @@ import { mapState, mapGetters, mapMutations, mapActions} from 'vuex'
                     });
                 }
             },
+            goToCard() {
+              this.$router.push({name: 'movieCard', params: { id: this.movie.id }})
+            }
         },
         mounted() {
             this.generatePostersPath();

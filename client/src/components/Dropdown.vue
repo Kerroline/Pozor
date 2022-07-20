@@ -1,5 +1,5 @@
 <template>
-    <div class="menu-item" @click="isOpen = !isOpen" >
+    <div class="menu-item" @click="dropdownClicked" >
         <a href ='#'>
             {{ title }}
         </a>
@@ -29,8 +29,13 @@ export default {
   data () {
     return {
       isOpen: false,
-      }
     }
+  },
+  methods: {
+    dropdownClicked() {
+      return !this.isOpen;
+    }
+  }
 }
 </script>
 

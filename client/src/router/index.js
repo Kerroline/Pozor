@@ -20,7 +20,7 @@ import middlewarePipeline from '@/router/middlewarePipeline'
 const routes = [
   {
     path: '/',
-    name: 'mainpage', 
+    name: 'main-page',
     component: MainPage,
   },
   {
@@ -44,12 +44,13 @@ const routes = [
     },
   },
   {
-    path: '/moviecard/:id', 
-    name: 'moviecard',
+    path: '/movie-card/:id',
+    name: 'movieCard',
     component: MovieCardPage,
   },
   {
-    path: '/profile', 
+    path: '/profile',
+    name: 'profile',
     component: Profile,
     meta: {
       middleware: [
@@ -58,8 +59,8 @@ const routes = [
     },
   },
   {
-    path: '/createmovie', 
-    name: 'createmovie',
+    path: '/create-movie',
+    name: 'createMovie',
     component: CreateMovie,
     meta: {
       middleware: [

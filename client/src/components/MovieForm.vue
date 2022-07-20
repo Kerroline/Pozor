@@ -51,7 +51,7 @@
                 style="align-self:flex-end;  margin-top: 10px;"
                 @click="movieRequest"
             > 
-               {{this.isEdit ? "Save" : "Create"}}
+               {{ isEditForm }}
             </my-button>
         </form>
     </div>
@@ -61,79 +61,84 @@
 import { HOST_API_URL } from "@/store";
 import MyButton from './UI/MyButton.vue';
 import MyInput from './UI/MyInput.vue'
-    export default {
-        components: { 
-            MyInput,
-            MyButton 
+export default {
+    components: {
+        MyInput,
+        MyButton
+    },
+    props: {
+        isEdit: {
+            type: Boolean,
+            required : true
         },
-        props: {
-            isEdit: {
-                type: Boolean,
-                required : true
-            },
-            movie: {
-                type: Object,
-            }
-        },
-        data() {
-            return {
-                selectGenres: [{}],
-                movieModel: {
-                    title: "",
-                    description: "",
-                    link: "",
-                    genres: [],
-                    author_id: 0,
-                },
-                poster: "",
-                galleries: "",
-            };
-        },
-        methods: {
-            async getGenres() {
-                try {
-                    const response = await fetch(`${HOST_API_URL}/getAllGenres`, {
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json",
-                        },
-                    });
-                    if (response.ok) {
-                        const content = await response.json();
-                        this.selectGenres = content.data;
-                    }
-                }
-                catch (err) {
-                    console.error(err);
-                }
-            },
-            movieRequest() {
-                const movieFormData = {
-                    "movieModel": this.movieModel,
-                    "poster": this.poster,
-                    "galleries": this.galleries
-                };
-                if(this.isEdit) {
-                    this.$emit('edit', movieFormData);
-                }
-                else {
-                    this.$emit('create', movieFormData);
-                }
-            },
-            handlePosterUpload(event) {
-                this.poster = event.target.files[0];
-            },
-            handleGalleriesUpload(event) {
-                this.galleries = event.target.files;
-            },
-        }, 
-        mounted() {
-            this.getGenres();
-            if(this.isEdit) {
-                this.movieModel = this.movie;
-            }
+        movie: {
+            type: Object,
         }
-    }
+    },
+    data() {
+        return {
+            selectGenres: [{}],
+            movieModel: {
+                title: "",
+                description: "",
+                link: "",
+                genres: [],
+                author_id: 0,
+            },
+            poster: "",
+            galleries: "",
+        };
+    },
+    computed: {
+        isEditForm() {
+            return this.isEdit ? "Save" : "Create";
+        }
+    },
+    mounted() {
+        this.getGenres();
+        if(this.isEdit) {
+            this.movieModel = this.movie;
+        }
+    },
+    methods: {
+      async getGenres() {
+        try {
+          const response = await fetch(`${HOST_API_URL}/getAllGenres`, {
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+            },
+          });
+          if (response.ok) {
+            const content = await response.json();
+            this.selectGenres = content.data;
+          }
+        }
+        catch (err) {
+          console.error(err);
+        }
+      },
+      movieRequest() {
+        const movieFormData = {
+          "movieModel": this.movieModel,
+          "poster": this.poster,
+          "galleries": this.galleries
+        };
+        if(this.isEdit) {
+          this.$emit('edit', movieFormData);
+        }
+        else {
+          this.$emit('create', movieFormData);
+        }
+      },
+      handlePosterUpload(event) {
+        this.poster = event.target.files[0];
+      },
+      handleGalleriesUpload(event) {
+        this.galleries = event.target.files;
+      },
+    },
+}
 </script>
 
 <style scoped>

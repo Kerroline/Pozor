@@ -1,5 +1,5 @@
 <template>
-    <div v-if="movies.length > 0">
+    <div v-if="isNotEmpty">
         <h3>Список фильмов</h3>
         <transition-group name="movie-list">
             <movie-item 
@@ -9,24 +9,29 @@
             />
         </transition-group>
     </div>
-    <h2 v-else style="color: red">
-            Список фильмов пуст!
+    <h2 v-else class="isH2">
+        Список фильмов пуст!
     </h2>
 </template>
 
 <script>
 import MovieItem from "@/components/MovieItem.vue"
-    export default {
-        components: {
-            MovieItem,
-        },
-        props: {
-            movies: {
-                type: Array,
-                required : true
-            }
+export default {
+    props: {
+        movies: {
+            type: Array,
+            required : true
         }
-    }
+    },
+    computed: {
+      isNotEmpty() {
+        return this.movies.length > 0;
+      }
+    },
+    components: {
+      MovieItem,
+    },
+}
 </script>
 
 <style scoped>
@@ -45,5 +50,8 @@ import MovieItem from "@/components/MovieItem.vue"
 }
 .movie-list-move {
   transition: transform 0.5s ease;
+}
+.isH2 {
+  color: red
 }
 </style>

@@ -1,37 +1,31 @@
 <template>
-    <div v-if="isNotEmpty">
-        <h3>Список фильмов</h3>
-        <transition-group name="movie-list">
-            <movie-item 
-                v-for="movie in movies" 
-                :movie="movie" 
-                :key="movie.id"
-            />
-        </transition-group>
-    </div>
-    <h2 v-else class="isH2">
-        Список фильмов пуст!
-    </h2>
+  <div v-if="isNotEmpty">
+    <h3>Список фильмов</h3>
+    <transition-group name="movie-list">
+      <movie-item v-for="movie in movies" :movie="movie" :key="movie.id" />
+    </transition-group>
+  </div>
+  <h2 v-else class="isH2">Список фильмов пуст!</h2>
 </template>
 
 <script>
-import MovieItem from "@/components/MovieItem.vue"
+import MovieItem from "@/components/MovieItem.vue";
 export default {
-    props: {
-        movies: {
-            type: Array,
-            required : true
-        }
+  props: {
+    movies: {
+      type: Array,
+      required: true,
     },
-    computed: {
-      isNotEmpty() {
-        return this.movies.length > 0;
-      }
+  },
+  computed: {
+    isNotEmpty() {
+      return this.movies.length > 0;
     },
-    components: {
-      MovieItem,
-    },
-}
+  },
+  components: {
+    MovieItem,
+  },
+};
 </script>
 
 <style scoped>
@@ -52,6 +46,6 @@ export default {
   transition: transform 0.5s ease;
 }
 .isH2 {
-  color: red
+  color: red;
 }
 </style>

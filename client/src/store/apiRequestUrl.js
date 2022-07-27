@@ -1,4 +1,4 @@
-import { HOST_API_URL, ROLE_ADMIN_ID } from "@/store";
+import { HOST_API_URL } from "@/store";
 
 class ApiRequestUrl {
   buildRequestUrl(link) {

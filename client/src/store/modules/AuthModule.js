@@ -1,4 +1,4 @@
-import { HOST_API_URL, ROLE_ADMIN_ID } from "@/store";
+import { ROLE_ADMIN_ID } from "@/store";
 import { useCookies } from "vue3-cookies";
 import request from "@/store/request";
 

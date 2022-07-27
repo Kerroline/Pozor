@@ -2,6 +2,7 @@ import { HOST_API_URL } from "@/store";
 
 class ApiRequestUrl {
   buildRequestUrl(link) {
+    if (link[0] === "/") link = link.slice(1);
     return `${HOST_API_URL}/${link}`;
   }
 

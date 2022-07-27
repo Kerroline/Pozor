@@ -52,14 +52,14 @@ export const authModule = {
           // TODO: лишние комменты убрать
           //axios.defaults.headers.common["Authorization"] = 'Bearer ' + cookies.get("jwt");
           // TODO: поправить это говно, медоты называть с помощью camelCase
-          commit("SET_AUHT", true);
-          commit("SET_USER", user);
+          commit("setAuth", true);
+          commit("setUser", user);
           return true;
         }
       } catch (err) {
         // TODO: поправить это говно, медоты называть с помощью camelCase
-        commit("SET_AUHT", false);
-        commit("SET_USER", null);
+        commit("setAuth", false);
+        commit("setUser", null);
         console.error(err);
         return false;
       }
@@ -78,12 +78,12 @@ export const authModule = {
         if (response.ok) {
           const content = await response.json();
           const user = content.data;
-          commit("SET_AUHT", true);
-          commit("SET_USER", user);
+          commit("setAuth", true);
+          commit("setUser", user);
         }
       } catch (err) {
-        commit("SET_AUHT", false);
-        commit("SET_USER", null);
+        commit("setAuth", false);
+        commit("setUser", null);
         console.error(err);
         return false;
       }
@@ -100,8 +100,8 @@ export const authModule = {
           credentials: "include",
         });
         if (response.ok) {
-          commit("SET_AUHT", false);
-          commit("SET_USER", null);
+          commit("setAuth", false);
+          commit("setUser", null);
         }
       } catch (err) {
         console.error(err);

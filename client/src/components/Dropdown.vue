@@ -36,13 +36,13 @@ export default {
   },
   methods: {
     dropdownClicked() {
-      return !this.isOpen;
+      this.isOpen = !this.isOpen;
     },
   },
 };
 </script>
 
-<style>
+<style lang="scss">
 nav .menu-item svg {
   width: 10px;
   margin-left: 10px;

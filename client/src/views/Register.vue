@@ -54,7 +54,7 @@ import { HOST_API_URL } from "@/store";
                     if(response.ok) {
                         this.autoLogin();
                     } else {
-                        await this.$router.push('/login');
+                        await this.$router.push({ name: 'login' });
                     }
                 } catch (err) {
                     console.error(err);
@@ -64,9 +64,7 @@ import { HOST_API_URL } from "@/store";
             async autoLogin() {
                 const ok = await this.$store.dispatch('auth/login',JSON.stringify(this.$data));
                 if(ok) {
-                    await this.$router.push('/profile');
-                } else {
-                    // throw Error
+                    await this.$router.push({ name: 'profile' });
                 }
             }
         }, 

@@ -23,7 +23,7 @@
                 My movies
             </router-link>
         <br/>
-            <router-link to="/createmovie"> 
+            <router-link to="/create-movie">
                 Create a new movie
             </router-link>
         <br/>

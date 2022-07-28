@@ -1,45 +1,38 @@
 <template>
   <div class="app">
     <div class="content">
-      <router-view/>
+      <router-view />
     </div>
     <header class="header">
-      <Navbar/>
+      <Navbar />
     </header>
     <Footer></Footer>
   </div>
 </template>
 
 <script>
-import Navbar from '@/components/Navbar.vue'
-import Footer from '@/components/Footer.vue'
-import { mapState, mapGetters, mapMutations, mapActions} from 'vuex'
+import Navbar from "@/components/Navbar.vue";
+import Footer from "@/components/Footer.vue";
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   components: {
     Navbar,
     Footer,
   },
-   methods: {
-            ...mapMutations({
-
-            }),
-            ...mapActions({
-                preloadUser: 'auth/getUser',
-                logout: 'auth/logout',
-            }),
-        },
-        created() {
-          try {
-            this.preloadUser();
-          }
-          catch(err) {
-            
-          }
-        },
-        mounted() {
-            
-        },
-}
+  methods: {
+    ...mapMutations({}),
+    ...mapActions({
+      preloadUser: "auth/getUser",
+      logout: "auth/logout",
+    }),
+  },
+  created() {
+    try {
+      this.preloadUser();
+    } catch (err) {}
+  },
+  mounted() {},
+};
 </script>
 
 <style>
@@ -77,6 +70,4 @@ export default {
   flex-direction: column;
   flex: 1 0 auto;
 }
-
-
 </style>

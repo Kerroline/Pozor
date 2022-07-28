@@ -1,16 +1,16 @@
 <template>
-    <button class="btn">
-        <slot></slot>
-    </button>
+  <button class="btn">
+    <slot></slot>
+  </button>
 </template>
 
 <script>
-    export default {
-        name: 'my-button',
-    }
+export default {
+  name: "my-button",
+};
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .btn {
   padding: 10px 15px;
   background: none;

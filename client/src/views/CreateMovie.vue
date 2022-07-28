@@ -36,7 +36,7 @@ import MovieForm from "@/components/MovieForm.vue";
                 const ok_poster = await this.uploadPosterRequest(createdMovie.id, movieFormData.poster);
                 const ok_galleries = await this.uploadGalleriesPipeline(createdMovie.id, movieFormData.galleries);
                 if(ok_poster && ok_galleries ) {
-                    this.$router.push(`/moviecard/${createdMovie.id}`);
+                    this.$router.push({ name: 'movie-card', params: { id: createdMovie.id } });
                 }
             }
         },
